@@ -2,7 +2,7 @@ import { useEffect, useLayoutEffect, useMemo } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
 import * as THREE from 'three'
 import { useCenaGLTF } from './useCenaGLTF'
-import { useProgressoSuavizado } from './useProgressoScroll'
+import { useProgresso } from './progresso'
 
 function ajustarTela(camera: THREE.PerspectiveCamera, largura: number, altura: number, fovBase: number) {
   camera.aspect = largura / altura
@@ -31,7 +31,7 @@ export function CameraDoBlender() {
   const set = useThree((s) => s.set)
   const get = useThree((s) => s.get)
   const size = useThree((s) => s.size)
-  const progresso = useProgressoSuavizado()
+  const progresso = useProgresso()
 
   // FOV original lido direto do arquivo, porque camera.fov é alterado logo abaixo
   const fovBase = THREE.MathUtils.radToDeg(parser.json.cameras[0].perspective.yfov)

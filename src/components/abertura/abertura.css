@@ -1,0 +1,50 @@
+/* Camada clara da porta: acima do canvas e do conteúdo (no fade de saída, o site "surge da luz") */
+.camada-luz {
+  position: fixed;
+  inset: 0;
+  z-index: 3;
+  background: var(--luz-porta);
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Fade de saída. O !important vence a opacidade inline que o useFrame escreve: se o R3F
+   ainda rodar um quadro atrasado depois da troca de fase, ele não consegue "reacender" a
+   camada. A transição fica só aqui porque, no corredor, a opacidade muda todo quadro. */
+.camada-luz.saindo {
+  opacity: 0 !important;
+  transition: opacity 1.4s ease 0.2s;
+}
+
+/* mesmo estilo pixel do site: fundo escuro e borda pixel verde-limão */
+.botao-pular {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 4;
+  padding: 0.5rem 1rem;
+  border: 0;
+  border-radius: 0;
+  font: 600 0.85rem var(--fonte-mono);
+  letter-spacing: 0.06em;
+  color: var(--destaque);
+  background: rgba(11, 18, 13, 0.75);
+  box-shadow:
+    0 -3px 0 0 var(--destaque),
+    0 3px 0 0 var(--destaque),
+    -3px 0 0 0 var(--destaque),
+    3px 0 0 0 var(--destaque);
+  cursor: pointer;
+}
+
+.botao-pular:hover,
+.botao-pular:focus-visible {
+  color: var(--fundo);
+  background: var(--destaque);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .camada-luz.saindo {
+    transition: none;
+  }
+}

@@ -1,7 +1,7 @@
 import { useFrame, useThree } from '@react-three/fiber'
 import { MathUtils, type WebGLRenderer } from 'three'
 import { EXPOSICAO_CORREDOR, EXPOSICAO_PORTA, luzDaPorta } from './clima'
-import { useProgressoSuavizado } from './useProgressoScroll'
+import { useProgresso } from './progresso'
 
 function aplicarExposicao(gl: WebGLRenderer, luz: number) {
   gl.toneMappingExposure = MathUtils.lerp(EXPOSICAO_CORREDOR, EXPOSICAO_PORTA, luz)
@@ -13,7 +13,7 @@ function aplicarExposicao(gl: WebGLRenderer, luz: number) {
 // então basta mudar gl.toneMappingExposure, sem setState nem acesso ao efeito.
 export function ExposicaoDoPercurso() {
   const gl = useThree((s) => s.gl)
-  const progresso = useProgressoSuavizado()
+  const progresso = useProgresso()
 
   useFrame(() => aplicarExposicao(gl, luzDaPorta(progresso.current)))
 

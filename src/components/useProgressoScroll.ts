@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { useFrame } from '@react-three/fiber'
+import { useFrame, useThree } from '@react-three/fiber'
 import { MathUtils } from 'three'
 
 // quanto maior, mais rápido o progresso alcança o scroll (4 ≈ 0,25 s de atraso)
@@ -29,15 +29,25 @@ export function useProgressoScroll() {
 }
 
 // Progresso que persegue o scroll com atraso suave, em vez de pular junto com cada "clique"
-// da roda. Só funciona dentro do Canvas. Câmera, exposição e Bloom usam este mesmo cálculo,
-// então a luz acompanha a posição da câmera, e não o scroll cru.
-export function useProgressoSuavizado() {
+// da roda. Só funciona dentro do Canvas, e é chamado uma vez só (no ProvedorDoProgresso):
+// câmera, exposição, Bloom e transição leem o mesmo valor, então andam juntos.
+// Fora do corredor (ativo = false) o progresso fica parado no fim, e o scroll da página
+// passa a ser só do conteúdo.
+export function useProgressoSuavizado(ativo: boolean) {
   const alvo = useProgressoScroll()
   const progresso = useRef(0)
+  const invalidate = useThree((s) => s.invalidate)
+
+  // ao entrar ou sair do corredor, pula direto pro início ou pro fim em vez de "voar" pelo
+  // corredor; e pede um quadro, porque no site o canvas só renderiza sob demanda
+  useEffect(() => {
+    progresso.current = ativo ? 0 : 1
+    invalidate()
+  }, [ativo, invalidate])
 
   // prioridade -1: atualiza antes dos useFrame que leem o progresso (prioridade 0)
   useFrame((_, delta) => {
-    progresso.current = MathUtils.damp(progresso.current, alvo.current, SUAVIDADE, delta)
+    if (ativo) progresso.current = MathUtils.damp(progresso.current, alvo.current, SUAVIDADE, delta)
   }, -1)
 
   return progresso

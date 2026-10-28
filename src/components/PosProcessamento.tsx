@@ -5,7 +5,7 @@ import { Bloom, EffectComposer, Noise, ToneMapping, Vignette } from '@react-thre
 import { BlendFunction, ToneMappingMode, type BloomEffect } from 'postprocessing'
 import { MathUtils } from 'three'
 import { BLOOM_CORREDOR, BLOOM_PORTA, luzDaPorta } from './clima'
-import { useProgressoSuavizado } from './useProgressoScroll'
+import { useProgresso } from './progresso'
 
 // Bloom: só brilha o que passar do limiar. O valor é luminância HDR (linear, antes do tone
 // mapping e da exposição), não brilho de tela. Medido na cena: paredes, teto, vigas e cortinas
@@ -36,7 +36,7 @@ function ajustarBloom(bloom: BloomEffect | null, luz: number) {
 export function PosProcessamento() {
   const [leve, setLeve] = useState(ehTelaDeToque)
   const bloom = useRef<BloomEffect>(null)
-  const progresso = useProgressoSuavizado()
+  const progresso = useProgresso()
 
   // Bloom fraco no corredor, crescendo junto com a exposição perto da porta
   useFrame(() => ajustarBloom(bloom.current, luzDaPorta(progresso.current)))

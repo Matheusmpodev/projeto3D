@@ -1,3 +1,16 @@
+/* paleta pixel art: escuro com verde-limão */
+:root {
+  --fundo: #0b120d;
+  --card: #111c14;
+  --borda: #22352a;
+  --destaque: #b6f36a;
+  --texto: #eef2df;
+  --texto-2: #a9bba3;
+  --luz-porta: #f5f2e6; /* camada clara da transição */
+  --fonte-pixel: 'Pixelify Sans', 'IBM Plex Mono', monospace;
+  --fonte-mono: 'IBM Plex Mono', ui-monospace, monospace;
+}
+
 *,
 *::before,
 *::after {
@@ -6,13 +19,66 @@
 
 body {
   margin: 0;
-  background: #1b241a;
-  color: #eef2e6;
-  font-family: system-ui, sans-serif;
+  background: var(--fundo);
+  color: var(--texto);
+  font-family: var(--fonte-mono);
 }
 
 /* Div invisível que dá altura à página. Rolar do topo ao fim dela percorre a animação
    inteira: 600vh = 5 telas de rolagem (a última tela de altura não conta). */
 .trilha-scroll {
   height: 600vh;
+}
+
+/* visível só para leitores de tela */
+.so-leitor {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* Borda "pixelada": 4 sombras sólidas (cima, baixo, esquerda, direita) sem desfoque.
+   Os cantos ficam vazios, como num desenho em pixel art. Troque a cor com --cor-borda. */
+.borda-pixel {
+  --cor-borda: var(--borda);
+  box-shadow:
+    0 -3px 0 0 var(--cor-borda),
+    0 3px 0 0 var(--cor-borda),
+    -3px 0 0 0 var(--cor-borda),
+    3px 0 0 0 var(--cor-borda);
+}
+
+/* botão verde-limão com borda pixel da mesma cor (cantos "mordidos") */
+.botao-limao {
+  padding: 0.55rem 1rem;
+  border: 0;
+  border-radius: 0;
+  font: 600 0.85rem var(--fonte-mono);
+  letter-spacing: 0.04em;
+  color: var(--fundo);
+  background: var(--destaque);
+  box-shadow:
+    0 -3px 0 0 var(--destaque),
+    0 3px 0 0 var(--destaque),
+    -3px 0 0 0 var(--destaque),
+    3px 0 0 0 var(--destaque);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.botao-limao:hover {
+  filter: brightness(1.1);
+}
+
+.botao-limao:focus-visible {
+  outline: 2px solid var(--texto);
+  outline-offset: 6px;
+}
+
+.icone-pixel {
+  image-rendering: pixelated;
+  flex-shrink: 0;
 }
