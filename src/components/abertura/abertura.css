@@ -16,12 +16,76 @@
   transition: opacity 1.4s ease 0.2s;
 }
 
+/* ---------- Tela de carregamento ---------- */
+
+/* acima do canvas e da camada clara (vem depois no DOM); o botão Pular (z 4) fica por cima */
+.carregamento {
+  position: fixed;
+  inset: 0;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 22px;
+  padding: 16px;
+  background: var(--fundo);
+  transition:
+    opacity 0.8s ease,
+    visibility 0s linear 0.8s; /* some de vez (sem pegar cliques) só depois do fade */
+}
+
+.carregamento.pronta {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.carregamento p {
+  margin: 0;
+  font-family: var(--fonte-pixel);
+}
+
+.carregamento-nome {
+  font-weight: 600;
+  font-size: clamp(2rem, 9vw, 3.5rem);
+  letter-spacing: 0.06em;
+  color: var(--destaque);
+}
+
+.carregamento-barra {
+  --cor-borda: var(--destaque);
+  display: flex;
+  gap: 3px;
+  width: min(320px, 80vw);
+  padding: 5px;
+}
+
+.carregamento-barra span {
+  flex: 1;
+  height: 16px;
+  background: var(--borda);
+}
+
+.carregamento-barra span.cheio {
+  background: var(--destaque);
+}
+
+.carregamento-numero {
+  font-size: 1.25rem;
+  color: var(--texto);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Botão Pular ---------- */
+
 /* mesmo estilo pixel do site: fundo escuro e borda pixel verde-limão */
 .botao-pular {
   position: fixed;
   right: 24px;
   bottom: 24px;
   z-index: 4;
+  min-height: 44px; /* área de toque mínima recomendada */
   padding: 0.5rem 1rem;
   border: 0;
   border-radius: 0;
@@ -44,7 +108,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .camada-luz.saindo {
+  .camada-luz.saindo,
+  .carregamento {
     transition: none;
   }
 }

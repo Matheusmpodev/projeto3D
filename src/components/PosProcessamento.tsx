@@ -5,6 +5,7 @@ import { Bloom, EffectComposer, Noise, ToneMapping, Vignette } from '@react-thre
 import { BlendFunction, ToneMappingMode, type BloomEffect } from 'postprocessing'
 import { MathUtils } from 'three'
 import { BLOOM_CORREDOR, BLOOM_PORTA, luzDaPorta } from './clima'
+import { ehTelaDeToque } from './dispositivo'
 import { useProgresso } from './progresso'
 
 // Bloom: só brilha o que passar do limiar. O valor é luminância HDR (linear, antes do tone
@@ -23,9 +24,6 @@ const VINHETA_ESCURIDAO = 0.45 // 0 = sem vinheta, 1 = bordas pretas
 // Granulado de filme
 const GRAO_OPACIDADE = 0.06
 
-// celular (tela de toque) começa no modo leve
-const ehTelaDeToque = () => window.matchMedia('(pointer: coarse)').matches
-
 // direto no efeito, sem setState: muda todo quadro e não precisa re-renderizar o React
 function ajustarBloom(bloom: BloomEffect | null, luz: number) {
   if (bloom) bloom.intensity = MathUtils.lerp(BLOOM_CORREDOR, BLOOM_PORTA, luz)
@@ -34,7 +32,7 @@ function ajustarBloom(bloom: BloomEffect | null, luz: number) {
 // Efeitos de tela aplicados depois de renderizar a cena.
 // Modo leve (celular ou FPS baixo): só vinheta e tone mapping, sem Bloom e sem granulado.
 export function PosProcessamento() {
-  const [leve, setLeve] = useState(ehTelaDeToque)
+  const [leve, setLeve] = useState(ehTelaDeToque) // celular já começa no modo leve
   const bloom = useRef<BloomEffect>(null)
   const progresso = useProgresso()
 

@@ -6,7 +6,7 @@ export function Menu({ onReverEntrada }: { onReverEntrada: () => void }) {
     <header className="menu">
       <span className="menu-logo">
         <Icone nome="folha" tamanho={28} />
-        LADO DE FORA
+        PIXELCLIMA
       </span>
       <nav className="menu-links" aria-label="Seções">
         <a href="#agora">Agora</a>

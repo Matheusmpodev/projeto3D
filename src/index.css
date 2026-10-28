@@ -53,6 +53,7 @@ body {
 
 /* botão verde-limão com borda pixel da mesma cor (cantos "mordidos") */
 .botao-limao {
+  min-height: 44px; /* área de toque mínima recomendada (Apple/WCAG), mesmo com o padding menor do celular */
   padding: 0.55rem 1rem;
   border: 0;
   border-radius: 0;

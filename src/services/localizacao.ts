@@ -11,7 +11,7 @@ export const MONTES_CLAROS: Lugar = {
   longitude: -43.86167,
 }
 
-const CHAVE_SALVA = 'lado-de-fora:cidade'
+const CHAVE_SALVA = 'pixelclima:cidade'
 
 // se a pessoa não responder ao pedido de localização, não dá pra esperar para sempre
 const ESPERA_PELA_PERMISSAO = 12_000
