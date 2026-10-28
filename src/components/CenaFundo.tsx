@@ -9,6 +9,7 @@ import { PosProcessamento } from './PosProcessamento'
 import { ExposicaoDoPercurso } from './ExposicaoDoPercurso'
 import { ProvedorDoProgresso } from './ProvedorDoProgresso'
 import { TransicaoDaPorta } from './TransicaoDaPorta'
+import { ControleDaInstrucao } from './ControleDaInstrucao'
 import { EXPOSICAO_CORREDOR } from './clima'
 import { faixaDeDpr } from './dispositivo'
 import './CenaFundo.css'
@@ -16,6 +17,7 @@ import './CenaFundo.css'
 type Props = {
   fase: Fase
   camada: RefObject<HTMLDivElement | null>
+  instrucao: RefObject<HTMLDivElement | null> // "Atravesse o corredor…", no DOM
   onNaLuz: (naLuz: boolean) => void
   onFim: () => void
   onCenaPronta: () => void // a cena carregou e já foi desenhada (a tela de carregamento pode sair)
@@ -36,7 +38,7 @@ function AvisoDeCenaPronta({ onPronta }: { onPronta: () => void }) {
 
 // Canvas fixo ao fundo, ocupando a tela toda. No corredor, quem rola é a página
 // (ver .trilha-scroll); no site, ele fica parado e escondido atrás do conteúdo opaco.
-export function CenaFundo({ fase, camada, onNaLuz, onFim, onCenaPronta }: Props) {
+export function CenaFundo({ fase, camada, instrucao, onNaLuz, onFim, onCenaPronta }: Props) {
   const noCorredor = fase === 'corredor'
 
   return (
@@ -61,6 +63,7 @@ export function CenaFundo({ fase, camada, onNaLuz, onFim, onCenaPronta }: Props)
             <Cenario />
             <CameraDoBlender />
             <AvisoDeCenaPronta onPronta={onCenaPronta} />
+            <ControleDaInstrucao ativo={noCorredor} instrucao={instrucao} />
           </Suspense>
           <PosProcessamento />
           <TransicaoDaPorta ativo={noCorredor} camada={camada} onNaLuz={onNaLuz} onFim={onFim} />

@@ -107,9 +107,145 @@
   background: var(--destaque);
 }
 
+/* ---------- Instrução do início do corredor ---------- */
+
+/* Centralizada na tela, acima do canvas (z 0) e abaixo do Pular (z 4). Não pega cliques nem
+   toques: o scroll passa direto pra página */
+.instrucao {
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+  padding: 16px 16px 96px; /* folga embaixo: o bloco nunca chega na altura do Pular */
+  text-align: center;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+
+/* ao aparecer, espera um pouco: entra depois que a tela de carregamento já começou a sumir */
+.instrucao.visivel {
+  opacity: 1;
+  transition-delay: 0.4s;
+}
+
+.instrucao p {
+  margin: 0;
+}
+
+.instrucao-texto {
+  max-width: 18em;
+  font: 600 clamp(1.5rem, 5vw, 2.4rem) / 1.25 var(--fonte-pixel);
+  color: var(--texto);
+  /* sombra dura (pixel) + halo escuro: lê bem sobre a grama e sobre a porta clara */
+  text-shadow:
+    0 3px 0 rgba(0, 0, 0, 0.7),
+    0 0 18px rgba(0, 0, 0, 0.9);
+}
+
+.instrucao-dica {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  font: 600 0.85rem var(--fonte-mono);
+  letter-spacing: 0.06em;
+  color: var(--destaque);
+  /* contorno escuro nos 4 lados: o verde lê bem até em cima da porta clara */
+  text-shadow:
+    0 2px 0 var(--fundo),
+    0 -2px 0 var(--fundo),
+    2px 0 0 var(--fundo),
+    -2px 0 0 var(--fundo);
+}
+
+/* computador vê o mouse; tela de toque vê o dedo */
+.instrucao .so-toque {
+  display: none;
+}
+
+@media (pointer: coarse) {
+  .instrucao .so-mouse {
+    display: none;
+  }
+  .instrucao .so-toque {
+    display: flex;
+  }
+}
+
+/* os desenhos são box-shadow de um elemento de 3px (ver InstrucaoDoCorredor.tsx);
+   o contêiner reserva o tamanho do desenho */
+.icone-mouse,
+.icone-dedo {
+  position: relative;
+  /* contorno de 1 pixel escuro em volta do desenho (o ícone fica em cima da porta clara) */
+  filter: drop-shadow(3px 0 0 var(--fundo)) drop-shadow(-3px 0 0 var(--fundo)) drop-shadow(0 3px 0 var(--fundo))
+    drop-shadow(0 -3px 0 var(--fundo));
+}
+
+.icone-mouse {
+  width: 24px; /* 8 × 3px */
+  height: 36px; /* 12 × 3px */
+}
+
+.icone-dedo {
+  width: 27px; /* 9 × 3px */
+  height: 30px; /* 10 × 3px */
+  margin-top: 12px; /* espaço pro dedo subir sem encostar no texto de cima */
+}
+
+.icone-mouse > span,
+.icone-dedo > span {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+/* rodinha: coluna 3, linha 2 do desenho; desce 3 pixels e volta, em degraus */
+.icone-mouse > .icone-mouse-rodinha {
+  top: 6px;
+  left: 9px;
+  animation: rodinha 1.2s steps(3) infinite;
+}
+
+@keyframes rodinha {
+  to {
+    transform: translateY(9px);
+  }
+}
+
+/* dedo: surge embaixo, sobe e some, em degraus (sem deslizar suave, como sprite) */
+.icone-dedo > span {
+  animation: deslizar 1.6s steps(8) infinite;
+}
+
+@keyframes deslizar {
+  from {
+    transform: translateY(12px);
+    opacity: 0;
+  }
+  25%,
+  75% {
+    opacity: 1;
+  }
+  to {
+    transform: translateY(-12px);
+    opacity: 0;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .camada-luz.saindo,
-  .carregamento {
+  .carregamento,
+  .instrucao {
     transition: none;
+  }
+  .icone-mouse > .icone-mouse-rodinha,
+  .icone-dedo > span {
+    animation: none;
   }
 }

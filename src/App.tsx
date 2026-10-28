@@ -2,6 +2,7 @@ import { Suspense, lazy, useCallback, useEffect, useRef, useState } from 'react'
 import { cancelarCarregamento } from './components/carregamento'
 import { CamadaDeLuz } from './components/abertura/CamadaDeLuz'
 import { BotaoPular } from './components/abertura/BotaoPular'
+import { InstrucaoDoCorredor } from './components/abertura/InstrucaoDoCorredor'
 import { TelaDeCarregamento } from './components/abertura/TelaDeCarregamento'
 import { Site } from './components/site/Site'
 
@@ -23,6 +24,7 @@ function App() {
   // a cena.glb carregou e foi desenhada. Continua true depois: "Rever a entrada" não recarrega
   const [cenaPronta, setCenaPronta] = useState(false)
   const camada = useRef<HTMLDivElement>(null)
+  const instrucao = useRef<HTMLDivElement>(null)
 
   // cada fase começa do topo: o corredor na entrada, o conteúdo no título.
   // Com chaves de propósito: no Chrome atual scrollTo() devolve uma Promise, e o useEffect
@@ -58,7 +60,14 @@ function App() {
       {com3D && (
         // enquanto o arquivo JS do 3D chega, a tela de carregamento já cobre tudo (em 0%)
         <Suspense fallback={null}>
-          <CenaFundo fase={fase} camada={camada} onNaLuz={setNaLuz} onFim={abrirSite} onCenaPronta={marcarCenaPronta} />
+          <CenaFundo
+            fase={fase}
+            camada={camada}
+            instrucao={instrucao}
+            onNaLuz={setNaLuz}
+            onFim={abrirSite}
+            onCenaPronta={marcarCenaPronta}
+          />
         </Suspense>
       )}
       <CamadaDeLuz ref={camada} saindo={!noCorredor} />
@@ -68,6 +77,8 @@ function App() {
               carregamento não há o que rolar, e um scroll feito "às cegas" faria a câmera
               pular pro meio do corredor assim que ela aparecesse */}
           {cenaPronta && <div className="trilha-scroll" aria-hidden="true" />}
+          {/* invisível até o 3D mandar aparecer (ver ControleDaInstrucao) */}
+          <InstrucaoDoCorredor ref={instrucao} />
           <TelaDeCarregamento pronta={cenaPronta} />
           {!naLuz && <BotaoPular onPular={pular} />}
         </>
