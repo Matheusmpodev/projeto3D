@@ -17,7 +17,7 @@
 .hero {
   position: relative;
   min-height: 700px;
-  overflow: hidden;
+  /* sem overflow: hidden — a lista de sugestões da busca pode passar da borda do hero */
 }
 
 .hero-fundo {
@@ -197,8 +197,103 @@
 }
 
 .busca-cidade {
+  position: relative; /* referência da lista de sugestões */
+  text-align: left;
+}
+
+.busca-linha {
   display: flex;
   gap: 12px;
+}
+
+/* lista de sugestões abaixo do campo, por cima do que vier depois */
+.sugestoes {
+  position: absolute;
+  top: calc(100% + 12px);
+  left: 0;
+  right: 0;
+  z-index: 5;
+  background: var(--card);
+}
+
+.sugestoes ul {
+  margin: 0;
+  padding: 4px 0;
+  list-style: none;
+}
+
+.sugestoes button {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 100%;
+  padding: 10px 14px;
+  border: 0;
+  font: inherit;
+  text-align: left;
+  color: var(--texto);
+  background: none;
+  cursor: pointer;
+}
+
+.sugestoes button:hover,
+.sugestoes button:focus-visible {
+  outline: none;
+  background: var(--borda);
+}
+
+.sugestao-nome {
+  font: 500 1rem var(--fonte-pixel);
+}
+
+.sugestao-regiao {
+  font-size: 0.75rem;
+  color: var(--texto-2);
+}
+
+.sugestoes-aviso {
+  margin: 0;
+  padding: 12px 14px;
+  font-size: 0.8rem;
+  color: var(--texto-2);
+}
+
+/* ---------- Estados: carregando e erro ---------- */
+
+/* bloco de esqueleto: pisca em 2 passos (steps), no ritmo pixel art em vez de um brilho suave */
+.esqueleto {
+  display: block;
+  max-width: 100%;
+  background: var(--borda);
+  animation: esqueleto 1.1s steps(2) infinite;
+}
+
+@keyframes esqueleto {
+  50% {
+    opacity: 0.45;
+  }
+}
+
+/* o card central é semitransparente sobre a paisagem: o esqueleto precisa de mais contraste */
+.card-ao-vivo .esqueleto {
+  background: rgba(169, 187, 163, 0.22);
+}
+
+.ao-vivo-esqueleto {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  margin: 10px 0 24px;
+}
+
+.ao-vivo-erro {
+  margin: 18px 0 26px;
+}
+
+.ao-vivo-erro p {
+  margin: 0 0 18px;
+  font-size: 0.9rem;
 }
 
 .busca-cidade input {
@@ -383,7 +478,8 @@
 
 @media (prefers-reduced-motion: reduce) {
   .site,
-  .ao-vivo-ponto {
+  .ao-vivo-ponto,
+  .esqueleto {
     animation: none;
   }
 }

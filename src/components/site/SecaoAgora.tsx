@@ -1,41 +1,75 @@
 import { CardClima } from './CardClima'
 import { classificarAr, classificarUV, direcaoDoVento, notaDeUmidade, numero } from './formatacao'
+import type { NomeDoIcone } from './imagens'
 import type { DadosDoClima } from './tipos'
 
-// Seção AGORA/: as condições do momento, um card por medida.
-export function SecaoAgora({ dados }: { dados: DadosDoClima }) {
-  const { chuva, umidade, vento, indiceUV, qualidadeDoAr } = dados
+const SEM_DADO = '—'
 
+type Item = {
+  id?: string
+  rotulo: string
+  icone: NomeDoIcone
+  unidade?: string
+  valor: (d: DadosDoClima) => string
+  nota: (d: DadosDoClima) => string
+}
+
+// um card por medida; cada um sabe tirar seu valor e sua nota dos dados
+const ITENS: Item[] = [
+  {
+    rotulo: 'Chuva',
+    icone: 'chuva',
+    unidade: 'mm',
+    valor: (d) => numero(d.chuva.milimetros),
+    nota: (d) => (d.chuva.probabilidade === null ? 'Agora' : `${d.chuva.probabilidade}% de chance hoje`),
+  },
+  {
+    rotulo: 'Umidade',
+    icone: 'gota',
+    unidade: '%',
+    valor: (d) => numero(d.umidade),
+    nota: (d) => notaDeUmidade(d.umidade),
+  },
+  {
+    rotulo: 'Vento',
+    icone: 'vento',
+    unidade: 'km/h',
+    valor: (d) => numero(d.vento.kmh),
+    nota: (d) => `Vindo do ${direcaoDoVento(d.vento.direcaoGraus)}`,
+  },
+  {
+    rotulo: 'Índice UV',
+    icone: 'uv',
+    unidade: 'máx. hoje',
+    valor: (d) => (d.indiceUV === null ? SEM_DADO : numero(d.indiceUV)),
+    nota: (d) => (d.indiceUV === null ? 'Sem dados' : classificarUV(d.indiceUV)),
+  },
+  {
+    id: 'qualidade-do-ar',
+    rotulo: 'Qualidade do ar',
+    icone: 'folha',
+    unidade: 'AQI',
+    valor: (d) => (d.qualidadeDoAr === null ? SEM_DADO : numero(d.qualidadeDoAr)),
+    nota: (d) => (d.qualidadeDoAr === null ? 'Sem dados agora' : classificarAr(d.qualidadeDoAr)),
+  },
+]
+
+// Seção AGORA/: as condições do momento. Sem dados (carregando), os cards viram esqueleto.
+export function SecaoAgora({ dados }: { dados: DadosDoClima | null }) {
   return (
     <section id="agora" className="secao" aria-labelledby="titulo-agora">
       <h2 id="titulo-agora" className="secao-titulo">
         AGORA<span aria-hidden="true">/</span>
       </h2>
       <div className="grade-agora">
-        <CardClima
-          rotulo="Chuva"
-          icone="chuva"
-          valor={numero(chuva.milimetros)}
-          unidade="mm"
-          nota={`${chuva.probabilidade}% de chance hoje`}
-        />
-        <CardClima rotulo="Umidade" icone="gota" valor={numero(umidade)} unidade="%" nota={notaDeUmidade(umidade)} />
-        <CardClima
-          rotulo="Vento"
-          icone="vento"
-          valor={numero(vento.kmh)}
-          unidade="km/h"
-          nota={`Vindo do ${direcaoDoVento(vento.direcaoGraus)}`}
-        />
-        <CardClima rotulo="Índice UV" icone="uv" valor={numero(indiceUV)} nota={classificarUV(indiceUV)} />
-        <CardClima
-          id="qualidade-do-ar"
-          rotulo="Qualidade do ar"
-          icone="folha"
-          valor={numero(qualidadeDoAr)}
-          unidade="AQI"
-          nota={classificarAr(qualidadeDoAr)}
-        />
+        {ITENS.map(({ valor, nota, ...item }) => (
+          <CardClima
+            key={item.rotulo}
+            {...item}
+            valor={dados ? valor(dados) : undefined}
+            nota={dados ? nota(dados) : undefined}
+          />
+        ))}
       </div>
     </section>
   )

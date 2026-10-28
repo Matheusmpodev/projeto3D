@@ -7,8 +7,6 @@ export function Rodape() {
           Open-Meteo
         </a>
       </p>
-      {/* remover quando a API estiver ligada */}
-      <p className="rodape-aviso">Por enquanto, dados de exemplo.</p>
     </footer>
   )
 }

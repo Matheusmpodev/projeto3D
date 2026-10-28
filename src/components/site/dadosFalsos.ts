@@ -1,11 +1,12 @@
 import type { DadosDoClima } from './tipos'
 
-// DADOS FALSOS, só para montar o visual. Na próxima etapa a API Open-Meteo substitui este
-// objeto (mesmo formato, ver tipos.ts). Troque "clima" para ver os outros fundos e ícones.
+// DADOS FALSOS da etapa de visual. Não são mais usados (o site agora lê a Open-Meteo);
+// ficam só como exemplo do formato DadosDoClima.
 export const DADOS_DE_EXEMPLO: DadosDoClima = {
   cidade: 'São Paulo',
   atualizadoEm: '2026-10-28T14:30:00',
   clima: 'sol',
+  icone: 'sol',
   condicao: 'Ensolarado',
   temperatura: 29,
   maxima: 31,

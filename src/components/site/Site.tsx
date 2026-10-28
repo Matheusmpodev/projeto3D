@@ -1,17 +1,17 @@
 import { useEffect, useRef } from 'react'
 import { CardAoVivo } from './CardAoVivo'
-import { DADOS_DE_EXEMPLO } from './dadosFalsos'
 import { Hero } from './Hero'
 import { Menu } from './Menu'
 import { Rodape } from './Rodape'
 import { SecaoAgora } from './SecaoAgora'
 import { SecaoPrevisao } from './SecaoPrevisao'
+import { useClima } from './useClima'
 import './site.css'
 
 // Conteúdo do site, com fundo opaco por cima do canvas (que fica parado atrás).
-// Rola como uma página normal.
+// Rola como uma página normal. Os dados vêm da Open-Meteo (ver useClima).
 export function Site({ onReverEntrada }: { onReverEntrada: () => void }) {
-  const dados = DADOS_DE_EXEMPLO // a Open-Meteo substitui só este objeto
+  const { lugar, dados, erro, escolherLugar, tentarDeNovo } = useClima()
   const titulo = useRef<HTMLHeadingElement>(null)
 
   // o foco estava no corredor (ou no botão Pular, que sumiu): leva pro título do card,
@@ -22,14 +22,25 @@ export function Site({ onReverEntrada }: { onReverEntrada: () => void }) {
 
   return (
     <div className="site">
-      <Hero clima={dados.clima}>
+      {/* enquanto carrega, o fundo de sol (o mais neutro) */}
+      <Hero clima={dados?.clima ?? 'sol'}>
         <Menu onReverEntrada={onReverEntrada} />
-        <CardAoVivo dados={dados} tituloRef={titulo} />
+        <CardAoVivo
+          lugar={lugar}
+          dados={dados}
+          erro={erro}
+          onTentarDeNovo={tentarDeNovo}
+          onEscolherLugar={escolherLugar}
+          tituloRef={titulo}
+        />
       </Hero>
-      <main className="site-secoes">
-        <SecaoAgora dados={dados} />
-        <SecaoPrevisao dias={dados.previsao} />
-      </main>
+      {/* com erro, a mensagem fica só no card; as seções voltam quando os dados chegarem */}
+      {!erro && (
+        <main className="site-secoes">
+          <SecaoAgora dados={dados} />
+          <SecaoPrevisao dias={dados?.previsao ?? null} />
+        </main>
+      )}
       <Rodape />
     </div>
   )
