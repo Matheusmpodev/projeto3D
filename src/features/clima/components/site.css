@@ -459,9 +459,79 @@
   }
 }
 
+/* ---------- Quem fez ---------- */
+
+.quem-fez-nome {
+  margin: 0 0 8px;
+  font: 600 1.4rem var(--fonte-pixel);
+}
+
+.quem-fez-frase {
+  max-width: 40em;
+  margin: 0 0 28px;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--texto-2);
+}
+
+.links-pessoais {
+  display: flex;
+  flex-wrap: wrap; /* no celular, os botões descem pra próxima linha */
+  gap: 20px; /* folga pras bordas pixel, que ficam 3px pra fora */
+  margin: 0;
+  padding: 3px; /* idem: a borda da primeira linha não encosta no texto de cima */
+  list-style: none;
+}
+
+/* botão grande com borda pixel verde-limão (mesma técnica do .borda-pixel) */
+.botao-rede {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 52px; /* acima dos 44px mínimos de área de toque */
+  padding: 0.8rem 1.4rem;
+  font: 600 1rem var(--fonte-pixel);
+  letter-spacing: 0.08em;
+  color: var(--destaque);
+  text-decoration: none;
+  background: var(--card);
+  box-shadow:
+    0 -3px 0 0 var(--destaque),
+    0 3px 0 0 var(--destaque),
+    -3px 0 0 0 var(--destaque),
+    3px 0 0 0 var(--destaque);
+}
+
+.botao-rede:hover,
+.botao-rede:focus-visible {
+  color: var(--fundo);
+  background: var(--destaque);
+}
+
+.botao-rede:focus-visible {
+  outline: 2px solid var(--texto);
+  outline-offset: 6px;
+}
+
+/* celular: um botão por linha, ocupando a largura toda (fica mais fácil de acertar com o dedo) */
+@media (max-width: 560px) {
+  .links-pessoais li {
+    flex: 1 1 100%;
+  }
+  .botao-rede {
+    width: 100%;
+  }
+}
+
 /* ---------- Rodapé ---------- */
 
 .rodape {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 24px;
   max-width: 1120px;
   margin: 24px auto 0;
   padding: 24px clamp(16px, 4vw, 40px) 40px;
@@ -471,11 +541,27 @@
 }
 
 .rodape p {
-  margin: 0 0 4px;
+  margin: 0;
 }
 
 .rodape a {
   color: var(--destaque);
+}
+
+.rodape-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 20px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* texto pequeno, mas com área de toque de 44px de altura */
+.rodape-links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
 }
 
 .rodape-aviso {

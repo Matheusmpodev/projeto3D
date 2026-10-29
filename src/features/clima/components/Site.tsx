@@ -5,6 +5,7 @@ import { Menu } from './Menu'
 import { Rodape } from './Rodape'
 import { SecaoAgora } from './SecaoAgora'
 import { SecaoPrevisao } from './SecaoPrevisao'
+import { SecaoQuemFez } from './SecaoQuemFez'
 import { useClima } from '../hooks/useClima'
 import './site.css'
 
@@ -41,6 +42,10 @@ export function Site({ onReverEntrada }: { onReverEntrada: () => void }) {
           <SecaoPrevisao dias={dados?.previsao ?? null} />
         </main>
       )}
+      {/* fora do <main> do clima: não depende dos dados, então aparece até com erro na API */}
+      <div className="site-secoes">
+        <SecaoQuemFez />
+      </div>
       <Rodape />
     </div>
   )
