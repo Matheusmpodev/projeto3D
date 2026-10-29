@@ -11,8 +11,12 @@
     <link rel="icon" type="image/svg+xml" href="/pixelclima.svg" />
     <meta name="theme-color" content="#0b120d" />
 
-    <!-- Prévia ao compartilhar (LinkedIn, WhatsApp, etc.). O LinkedIn exige endereço absoluto
-         na imagem: o Vite troca %VITE_URL_DO_SITE% pelo valor do .env no build -->
+    <!-- %VITE_URL_DO_SITE% (endereço público, sem barra no fim) o Vite troca no build: vem das
+         variáveis de ambiente da Vercel ou do .env. O LinkedIn e o Google exigem endereço absoluto.
+         vite-ignore: sem a variável, o href fica "/" e o Vite tentaria tratá-lo como um arquivo do site -->
+    <link rel="canonical" href="%VITE_URL_DO_SITE%/" vite-ignore />
+
+    <!-- Prévia ao compartilhar (LinkedIn, WhatsApp, etc.) -->
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="pt_BR" />
     <meta property="og:site_name" content="PixelClima" />
@@ -27,8 +31,38 @@
     <meta property="og:image:height" content="630" />
     <meta property="og:image:alt" content="Corredor abandonado tomado pela grama, com uma porta iluminada ao fundo e o nome PixelClima" />
     <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- Dados estruturados pro Google: diz que a página é um aplicativo de clima gratuito.
+         É um bloco de dados, não um script executável: a CSP não precisa liberar nada pra ele -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "PixelClima",
+        "description": "Atravesse um corredor abandonado em 3D e saia para o clima real da sua cidade, em pixel art: temperatura de agora, previsão de 7 dias e qualidade do ar.",
+        "url": "%VITE_URL_DO_SITE%/",
+        "inLanguage": "pt-BR",
+        "applicationCategory": "WeatherApplication",
+        "operatingSystem": "Qualquer navegador moderno",
+        "browserRequirements": "Requer JavaScript e WebGL",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "BRL" }
+      }
+    </script>
   </head>
   <body>
+    <!-- sem JavaScript o site não funciona (3D e dados ao vivo); ao menos explica o que é.
+         Sem style="" aqui: a CSP bloqueia estilo inline. O visual vem do .sem-js do index.css -->
+    <noscript>
+      <div class="sem-js">
+        <h1>PixelClima</h1>
+        <p>
+          O PixelClima mostra o clima real da sua cidade em pixel art: temperatura de agora,
+          sensação térmica, chuva, vento, índice UV, qualidade do ar e a previsão dos próximos
+          7 dias, com dados da Open-Meteo. Antes, você atravessa um corredor abandonado em 3D.
+        </p>
+        <p>Para usar, ative o JavaScript no seu navegador.</p>
+      </div>
+    </noscript>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

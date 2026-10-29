@@ -83,3 +83,16 @@ body {
   image-rendering: pixelated;
   flex-shrink: 0;
 }
+
+/* aviso do <noscript> (index.html). O CSS chega mesmo sem JavaScript: o Vite põe um <link> no HTML */
+.sem-js {
+  max-width: 36rem;
+  margin: 15vh auto 0;
+  padding: 0 16px;
+  line-height: 1.6;
+}
+
+.sem-js h1 {
+  font: 600 2.5rem var(--fonte-pixel);
+  color: var(--destaque);
+}

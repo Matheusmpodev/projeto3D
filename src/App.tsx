@@ -1,17 +1,15 @@
 import { Suspense, lazy, useCallback, useEffect, useRef, useState } from 'react'
-import { cancelarCarregamento } from './components/carregamento'
-import { CamadaDeLuz } from './components/abertura/CamadaDeLuz'
-import { BotaoPular } from './components/abertura/BotaoPular'
-import { InstrucaoDoCorredor } from './components/abertura/InstrucaoDoCorredor'
-import { TelaDeCarregamento } from './components/abertura/TelaDeCarregamento'
-import { Site } from './components/site/Site'
+import { cancelarCarregamento } from './features/corredor/lib/carregamento'
+import { CamadaDeLuz } from './features/corredor/components/abertura/CamadaDeLuz'
+import { BotaoPular } from './features/corredor/components/abertura/BotaoPular'
+import { InstrucaoDoCorredor } from './features/corredor/components/abertura/InstrucaoDoCorredor'
+import { TelaDeCarregamento } from './features/corredor/components/abertura/TelaDeCarregamento'
+import type { Fase } from './features/corredor/tipos'
+import { Site } from './features/clima/components/Site'
 
 // O 3D (three, R3F, drei, pós-processamento) fica num arquivo JS separado, baixado só quando
 // o corredor aparece pela primeira vez. Quem usa "reduzir movimento" não baixa nada dele
-const CenaFundo = lazy(() => import('./components/CenaFundo').then((m) => ({ default: m.CenaFundo })))
-
-// 'corredor': o scroll da página move a câmera; 'site': o conteúdo rola como página normal
-export type Fase = 'corredor' | 'site'
+const CenaFundo = lazy(() => import('./features/corredor/components/CenaFundo').then((m) => ({ default: m.CenaFundo })))
 
 // com prefers-reduced-motion, vai direto ao conteúdo
 const faseInicial = (): Fase =>
